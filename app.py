@@ -26,8 +26,7 @@ st.markdown(
 )
 
 # -------- Paramètres --------
-scenarios = ["2", "2_VC", "2-7", "2-7_VC", "4", "4_VC"]
-villes = ["AGEN", "CARPENTRAS", "MACON", "MARIGNANE", "NANCY", "RENNES", "TOURS", "TRAPPES"]
+
 heures_par_mois = [744, 672, 744, 720, 744, 720, 744, 744, 720, 744, 720, 744]
 percentiles_list = [10, 25, 50, 75, 90]
 couleur_modele = "goldenrod"
@@ -50,8 +49,6 @@ mois_noms = {
 }
 
 # -------- Choix scénario et ville --------
-scenario_sel = st.selectbox("Choisir le scénario :", scenarios)
-ville_sel = st.selectbox("Choisir la ville :", villes)
 
 # -------- Upload des fichiers CSV --------
 uploaded_model1 = st.file_uploader("Déposer le fichier CSV du modèle 1 (colonne unique T°C) :", type=["csv"])
@@ -393,7 +390,7 @@ if uploaded_model1 and uploaded_model2:
         .background_gradient(subset=["Précision (%)"], cmap="RdYlGn", vmin=vminP, vmax=vmaxP, axis=None) \
         .format({"Précision (%)": "{:.2f}", "RMSE (heure)": "{:.2f}"})
 
-    st.subheader(f"Précision du modèle sur la répartition des durées des plages de température (TRACC +{scenario_sel}/{ville_sel})")
+    st.subheader(f"Précision du modèle sur la répartition des durées des plages de température (TRACC )")
     st.markdown(
         """
         Le RMSE correspond à la moyenne de l’écart absolu entre les valeurs du modèle et celles de la TRACC pour chaque intervalle de température.
@@ -452,7 +449,7 @@ if uploaded_model1 and uploaded_model2:
     ax.plot(df_tstats["Mois"], df_tstats["TRACC_Tm"], color="white", label="TRACC Tmoy", linestyle="--")
     ax.plot(df_tstats["Mois"], df_tstats["TRACC_Tn"], color="cyan", label="TRACC Tn", linestyle="--")
 
-    ax.set_title(f"Tn_mois / Tmoy_mois / Tx_mois – Modèle vs TRACC +{scenario_sel}/{ville_sel}")
+    ax.set_title(f"Tn_mois / Tmoy_mois / Tx_mois – Modèle vs TRACC ")
     ax.set_ylabel("Température (°C)")
     ax.tick_params(axis='x', rotation=45)
     ax.legend(facecolor="black")
@@ -616,7 +613,7 @@ if uploaded_model1 and uploaded_model2:
         ax.plot(pct_for_cdf, obs_tn_cdf, linestyle="--", linewidth=1.7, label="TRACC Tn", color=colors["Tn"])
     
         # Mise en forme
-        ax.set_title(f"{mois} — CDF Tn_jour / Tmoy_jour / Tx_jour (Modèle vs TRACC +{scenario_sel}/{ville_sel})", color="white")
+        ax.set_title(f"{mois} — CDF Tn_jour / Tmoy_jour / Tx_jour (Modèle vs TRACC )", color="white")
         ax.set_xlabel("Percentile", color="white")
         ax.set_ylabel("Température (°C)", color="white")
         ax.tick_params(colors="white")
@@ -985,7 +982,7 @@ if uploaded_model1 and uploaded_model2:
         )
         i+=1
     
-    ax.set_title(f"Percentiles {percentiles_list} – Modèle vs TRACC +{scenario_sel}/{ville_sel}")
+    ax.set_title(f"Percentiles {percentiles_list} – Modèle vs TRACC ")
     ax.set_ylabel("Température (°C)")
     ax.tick_params(axis="x", rotation=45)
     ax.legend(ncol=2, facecolor="black")
@@ -1006,7 +1003,7 @@ if uploaded_model1 and uploaded_model2:
 
         fig, ax = plt.subplots(figsize=(12, 4))
         ax.plot(np.linspace(0, 100, 100), mod_percentiles_100, label="Modèle", color=couleur_modele)
-        ax.plot(np.linspace(0, 100, 100), obs_percentiles_100, label=f"TRACC +{scenario_sel}/{ville_sel}", color=couleur_TRACC)
+        ax.plot(np.linspace(0, 100, 100), obs_percentiles_100, label=f"TRACC ", color=couleur_TRACC)
         ax.set_title(f"{mois} - Fonction de répartition", color="white")
         ax.set_xlabel("Percentile", color="white")
         ax.set_ylabel("Température (°C)", color="white")
@@ -1020,7 +1017,7 @@ if uploaded_model1 and uploaded_model2:
         mod_p = np.percentile(mod_mois, percentiles_list)
         df_p = pd.DataFrame({
             "Percentile": [f"P{p}" for p in percentiles_list],
-            f"TRACC +{scenario_sel}/{ville_sel}": obs_p,
+            f"TRACC ": obs_p,
             "Modèle": mod_p
         }).round(2)
         st.write(f"{mois} - Percentiles")
@@ -1049,7 +1046,7 @@ if uploaded_model1 and uploaded_model2:
     # ----- Plot de la CDF annuelle -----
     fig, ax = plt.subplots(figsize=(12, 4))
     ax.plot(percentiles_cdf, mod_percentiles_annual, label="Modèle", color=couleur_modele)
-    ax.plot(percentiles_cdf, obs_percentiles_annual, label=f"TRACC +{scenario_sel}/{ville_sel}", color=couleur_TRACC)
+    ax.plot(percentiles_cdf, obs_percentiles_annual, label=f"TRACC ", color=couleur_TRACC)
     
     ax.set_title("Année entière - Fonction de répartition", color="white")
     ax.set_xlabel("Percentile", color="white")
@@ -1069,7 +1066,7 @@ if uploaded_model1 and uploaded_model2:
     
     df_p_annual = pd.DataFrame({
         "Percentile": [f"P{p}" for p in percentiles_list],
-        f"TRACC +{scenario_sel}/{ville_sel}": obs_p_annual,
+        f"TRACC ": obs_p_annual,
         "Modèle": mod_p_annual
     }).round(2)
     
@@ -1077,7 +1074,7 @@ if uploaded_model1 and uploaded_model2:
     st.dataframe(df_p_annual, hide_index=True)
 
 
-    st.subheader(f"Bilan modèle vs TRACC +{scenario_sel}/{ville_sel} (Modèle - TRACC)") 
+    st.subheader(f"Bilan modèle vs TRACC  (Modèle - TRACC)") 
     # Création du DataFrame
     df_bilan = pd.DataFrame(df_percentiles_all).round(2)
     df_bilan["Ecart"] = df_bilan["Mod"] - df_bilan["Obs"]
