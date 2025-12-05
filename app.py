@@ -283,11 +283,11 @@ if uploaded_model1 and uploaded_model2:
            label="Modèle 2", color=couleur_TRACC)
     ax.bar(df_plot_year["Temp_Num"] + 0.25, df_plot_year["Modèle"], width=0.5,
            label="Modèle 1", color=couleur_modele)
+    fig_hist_year = fig
     ax.set_title("Année entière - Durée en heures par seuil de température")
     ax.set_xlabel("Température (°C)")
     ax.set_ylabel("Durée en heure")
     ax.legend()
-
     st.pyplot(fig)
     plt.close(fig)
 
