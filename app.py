@@ -310,7 +310,7 @@ if uploaded_model1 and uploaded_model2:
     ax.bar(df_plot_year["Temp_Num"], -df_plot_year["Différence absolue TRACC"], width=0.8,
            label="Différence : Modèle 1 < Modèle 2", color=couleur_TRACC)
 
-ax.set_title("Année entière - Différence en heures par seuil de température")
+    ax.set_title("Année entière - Différence en heures par seuil de température")
     ax.set_xlabel("Température (°C)")
     ax.set_ylabel("Durée en heure")
     ax.legend()
