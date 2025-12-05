@@ -206,7 +206,7 @@ if uploaded_model1 and uploaded_model2:
     )
 
     # Bins correspondant à [X, X+1[ pour chaque température entière
-    bin_edges = np.arange(-5, 46, 1)
+    bin_edges = bins = np.arange(-5, 46, 1)
     bin_labels = bin_edges[:-1].astype(int)
 
     def count_hours_in_bins(temp_hourly, bins):
