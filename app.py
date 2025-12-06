@@ -30,7 +30,7 @@ st.markdown(
 heures_par_mois = [744, 672, 744, 720, 744, 720, 744, 744, 720, 744, 720, 744]
 percentiles_list = [10, 25, 50, 75, 90]
 couleur_modele = "goldenrod"
-couleur_TRACC = "lightgray"
+couleur_Modèle 2 = "lightgray"
 vmaxT = 5
 vminT = -5
 vmaxP = 100
@@ -145,26 +145,26 @@ if uploaded_model1 and uploaded_model2:
         for seuil in t_sup_thresholds_list:
             heures_obs = np.sum(obs_mois > seuil)
             nb_heures_mod = np.sum(mod_mois > seuil)
-            ecart = nb_heures_mod - heures_obs  # Modèle - TRACC
+            ecart = nb_heures_mod - heures_obs  # Modèle - Modèle 2
             stats_sup.append({
                 "Mois": mois,
                 "Seuil (°C)": f"{seuil}",
                 "Heures Modèle": nb_heures_mod,
-                "Heures TRACC": heures_obs,
-                "Ecart (Modèle - TRACC)": ecart
+                "Heures Modèle 2": heures_obs,
+                "Ecart (Modèle - Modèle 2)": ecart
             })
 
         # Seuils inférieurs
         for seuil in t_inf_thresholds_list:
             heures_obs = np.sum(obs_mois < seuil)
             nb_heures_mod = np.sum(mod_mois < seuil)
-            ecart = nb_heures_mod - heures_obs  # Modèle - TRACC
+            ecart = nb_heures_mod - heures_obs  # Modèle - Modèle 2
             stats_inf.append({
                 "Mois": mois,
                 "Seuil (°C)": f"{seuil}",
                 "Heures Modèle": nb_heures_mod,
-                "Heures TRACC": heures_obs,
-                "Ecart (Modèle - TRACC)": ecart
+                "Heures Modèle 2": heures_obs,
+                "Ecart (Modèle - Modèle 2)": ecart
             })
 
     # Création des DataFrames
@@ -174,13 +174,13 @@ if uploaded_model1 and uploaded_model2:
     # Conversion en int
     for df in [df_sup, df_inf]:
         df["Heures Modèle"] = df["Heures Modèle"].astype(int)
-        df["Heures TRACC"] = df["Heures TRACC"].astype(int)
-        df["Ecart (Modèle - TRACC)"] = df["Ecart (Modèle - TRACC)"].astype(int)
+        df["Heures Modèle 2"] = df["Heures Modèle 2"].astype(int)
+        df["Ecart (Modèle - Modèle 2)"] = df["Ecart (Modèle - Modèle 2)"].astype(int)
 
     # Style : seuils supérieurs → rouge = plus chaud
     df_sup_styled = (
         df_sup.style
-        .background_gradient(subset=["Ecart (Modèle - TRACC)"], cmap="bwr", vmin=vminH, vmax=vmaxH, axis=None)
+        .background_gradient(subset=["Ecart (Modèle - Modèle 2)"], cmap="bwr", vmin=vminH, vmax=vmaxH, axis=None)
     )
     st.subheader("Nombre d'heures supérieur au(x) seuil(s)")
     st.dataframe(df_sup_styled, hide_index=True)
@@ -188,7 +188,7 @@ if uploaded_model1 and uploaded_model2:
     # Style : seuils inférieurs → rouge = plus froid
     df_inf_styled = (
         df_inf.style
-        .background_gradient(subset=["Ecart (Modèle - TRACC)"], cmap="bwr_r", vmin=vminH, vmax=vmaxH, axis=None)
+        .background_gradient(subset=["Ecart (Modèle - Modèle 2)"], cmap="bwr_r", vmin=vminH, vmax=vmaxH, axis=None)
     )
     st.subheader("Nombre d'heures inférieur au(x) seuil(s)")
     st.dataframe(df_inf_styled, hide_index=True)
@@ -227,13 +227,13 @@ if uploaded_model1 and uploaded_model2:
         df_plot = pd.DataFrame({
             "Temp_Num": bin_labels,
             "Température": bin_labels.astype(str),
-            "TRACC": obs_counts,
+            "Modèle 2": obs_counts,
             "Modèle": mod_counts
         }).sort_values("Temp_Num")
 
         # Création du plot
         fig, ax = plt.subplots(figsize=(14, 4))
-        ax.bar(df_plot["Temp_Num"] - 0.25, df_plot["TRACC"], width=0.5, label="Modèle 2", color=couleur_TRACC)
+        ax.bar(df_plot["Temp_Num"] - 0.25, df_plot["Modèle 2"], width=0.5, label="Modèle 2", color=couleur_Modèle 2)
         ax.bar(df_plot["Temp_Num"] + 0.25, df_plot["Modèle"], width=0.5, label="Modèle 1", color=couleur_modele)
         ax.set_title(f"{mois} - Durée en heure par seuil de température")
         ax.set_xlabel("Température (°C)")
@@ -266,21 +266,21 @@ if uploaded_model1 and uploaded_model2:
     # Comptages annuels
     obs_counts_annual = count_hours_in_bins(obs_hourly_annual, bin_edges)
     mod_counts_annual = count_hours_in_bins(mod_hourly_annual, bin_edges)
-    diff_counts_annual_TRACC = np.maximum(0, obs_counts_annual - mod_counts_annual)
+    diff_counts_annual_Modèle 2 = np.maximum(0, obs_counts_annual - mod_counts_annual)
     diff_counts_annual_modele = np.maximum(0, mod_counts_annual - obs_counts_annual)
 
     # Préparer DataFrame pour le plot
     df_plot_year = pd.DataFrame({
         "Temp_Num": bin_labels,
         "Température": bin_labels.astype(str),
-        "TRACC": obs_counts_annual,
+        "Modèle 2": obs_counts_annual,
         "Modèle": mod_counts_annual
     }).sort_values("Temp_Num")
 
     # Plot
     fig, ax = plt.subplots(figsize=(16, 5))
-    ax.bar(df_plot_year["Temp_Num"] - 0.25, df_plot_year["TRACC"], width=0.5,
-           label="Modèle 2", color=couleur_TRACC)
+    ax.bar(df_plot_year["Temp_Num"] - 0.25, df_plot_year["Modèle 2"], width=0.5,
+           label="Modèle 2", color=couleur_Modèle 2)
     ax.bar(df_plot_year["Temp_Num"] + 0.25, df_plot_year["Modèle"], width=0.5,
            label="Modèle 1", color=couleur_modele)
     fig_hist_year = fig
@@ -296,7 +296,7 @@ if uploaded_model1 and uploaded_model2:
         "Temp_Num": bin_labels,
         "Température": bin_labels.astype(str),
         "Différence absolue modele": diff_counts_annual_modele,
-        "Différence absolue TRACC": diff_counts_annual_TRACC
+        "Différence absolue Modèle 2": diff_counts_annual_Modèle 2
     }).sort_values("Temp_Num")
 
     # Plot
@@ -304,8 +304,8 @@ if uploaded_model1 and uploaded_model2:
     ax.bar(df_plot_year["Temp_Num"], df_plot_year["Différence absolue modele"], width=0.8,
            label="Différence : Modèle 1 > Modèle 2", color=couleur_modele)
 
-    ax.bar(df_plot_year["Temp_Num"], df_plot_year["Différence absolue TRACC"], width=0.8,
-           label="Différence : Modèle 1 < Modèle 2", color=couleur_TRACC)
+    ax.bar(df_plot_year["Temp_Num"], df_plot_year["Différence absolue Modèle 2"], width=0.8,
+           label="Différence : Modèle 1 < Modèle 2", color=couleur_Modèle 2)
 
     ax.set_title("Année entière - Différence en heures par seuil de température")
     ax.set_xlabel("Température (°C)")
@@ -319,12 +319,12 @@ if uploaded_model1 and uploaded_model2:
         """
         La couleur de la différence est définie ainsi :
 
-        Barres jaunes : le modèle compte davantage d’heures que la TRACC dans cette plage de température.
+        Barres jaunes : le modèle compte davantage d’heures que la Modèle 2 dans cette plage de température.
 
-        Barres blanches : la TRACC compte davantage d’heures que le modèle dans cette plage de température.
+        Barres blanches : la Modèle 2 compte davantage d’heures que le modèle dans cette plage de température.
 
-        La conclusion dépend donc de l’endroit où se situe cette différence. Une analyse doit être réalisée manuellement : par exemple, si la TRACC présente plus d’heures dans les plages « froides », cela signifie qu’elle est globalement plus froide que le modèle.
-        Comme les deux séries possèdent le même nombre total d’heures, un excès d’heures froides dans la TRACC implique mécaniquement un excès d’heures chaudes dans le modèle (et inversement).
+        La conclusion dépend donc de l’endroit où se situe cette différence. Une analyse doit être réalisée manuellement : par exemple, si la Modèle 2 présente plus d’heures dans les plages « froides », cela signifie qu’elle est globalement plus froide que le modèle.
+        Comme les deux séries possèdent le même nombre total d’heures, un excès d’heures froides dans la Modèle 2 implique mécaniquement un excès d’heures chaudes dans le modèle (et inversement).
         """,
         unsafe_allow_html=True
     )
@@ -335,22 +335,22 @@ if uploaded_model1 and uploaded_model2:
     
     # Comparaison pour les températures élevées
     tx_seuil_chaud = 25
-    heures_TRACC_chaud = np.sum(obs_hourly_annual > tx_seuil_chaud)
+    heures_Modèle 2_chaud = np.sum(obs_hourly_annual > tx_seuil_chaud)
     heures_modele_chaud = np.sum(mod_hourly_annual > tx_seuil_chaud)
     
-    if heures_TRACC_chaud > heures_modele_chaud:
-        phrase_tx_chaud = f"TRACC a plus d'heures avec une T>{tx_seuil_chaud}°C ({heures_TRACC_chaud}) que le modèle ({heures_modele_chaud})."
+    if heures_Modèle 2_chaud > heures_modele_chaud:
+        phrase_tx_chaud = f"Modèle 2 a plus d'heures avec une T>{tx_seuil_chaud}°C ({heures_Modèle 2_chaud}) que le modèle ({heures_modele_chaud})."
     else:
-        phrase_tx_chaud = f"Le modèle a plus d'heures avec une T>{tx_seuil_chaud}°C ({heures_modele_chaud}) que TRACC ({heures_TRACC_chaud})."
+        phrase_tx_chaud = f"Le modèle a plus d'heures avec une T>{tx_seuil_chaud}°C ({heures_modele_chaud}) que Modèle 2 ({heures_Modèle 2_chaud})."
 
     tn_seuil_froid = 5
-    heures_TRACC_froid = np.sum(obs_hourly_annual < tn_seuil_froid)
+    heures_Modèle 2_froid = np.sum(obs_hourly_annual < tn_seuil_froid)
     heures_modele_froid = np.sum(mod_hourly_annual < tn_seuil_froid)
     
-    if heures_TRACC_froid > heures_modele_chaud:
-        phrase_tn_froid = f"Le modèle a plus d'heures avec une T<{tn_seuil_froid}°C ({heures_modele_froid}) que TRACC ({heures_TRACC_froid})."
+    if heures_Modèle 2_froid > heures_modele_chaud:
+        phrase_tn_froid = f"Le modèle a plus d'heures avec une T<{tn_seuil_froid}°C ({heures_modele_froid}) que Modèle 2 ({heures_Modèle 2_froid})."
     else:
-        phrase_tn_froid = f"TRACC a plus d'heures avec une T<{tn_seuil_froid}°C ({heures_TRACC_froid}) que le modèle ({heures_modele_froid})."
+        phrase_tn_froid = f"Modèle 2 a plus d'heures avec une T<{tn_seuil_froid}°C ({heures_Modèle 2_froid}) que le modèle ({heures_modele_froid})."
 
     # Stocker dans st.session_state pour la page Résumé
     st.session_state["resume_hist"] = [phrase_tx_chaud, phrase_tn_froid]
@@ -390,10 +390,10 @@ if uploaded_model1 and uploaded_model2:
         .background_gradient(subset=["Précision (%)"], cmap="RdYlGn", vmin=vminP, vmax=vmaxP, axis=None) \
         .format({"Précision (%)": "{:.2f}", "RMSE (heure)": "{:.2f}"})
 
-    st.subheader(f"Précision du modèle sur la répartition des durées des plages de température (TRACC )")
+    st.subheader(f"Précision du modèle sur la répartition des durées des plages de température (Modèle 2 )")
     st.markdown(
         """
-        Le RMSE correspond à la moyenne de l’écart absolu entre les valeurs du modèle et celles de la TRACC pour chaque intervalle de température.
+        Le RMSE correspond à la moyenne de l’écart absolu entre les valeurs du modèle et celles de la Modèle 2 pour chaque intervalle de température.
         La précision est calculée à partir de la différence totale d’heures dans chaque intervalle 
         """,
         unsafe_allow_html=True
@@ -403,7 +403,7 @@ if uploaded_model1 and uploaded_model2:
     # ============================
     #   COURBES Tn / Tmoy / Tx
     # ============================
-    st.subheader("Évolution mensuelle : Tn_mois / Tmoy_mois / Tx_mois (Modèle vs TRACC)")
+    st.subheader("Évolution mensuelle : Tn_mois / Tmoy_mois / Tx_mois (Modèle vs Modèle 2)")
     st.markdown(
         """  
         - Les valeurs tracées représentent les températures minimales et maximales **absolues** du mois (c’est-à-dire P0 et P100)
@@ -433,7 +433,7 @@ if uploaded_model1 and uploaded_model2:
     
         results_tstats.append({
             "Mois": mois,
-            "TRACC_Tn": obs_tn, "Modèle_Tn": mod_tn, "TRACC_Tm": obs_tm, "Modèle_Tm": mod_tm, "TRACC_Tx": obs_tx, "Modèle_Tx": mod_tx
+            "Modèle 2_Tn": obs_tn, "Modèle_Tn": mod_tn, "Modèle 2_Tm": obs_tm, "Modèle_Tm": mod_tm, "Modèle 2_Tx": obs_tx, "Modèle_Tx": mod_tx
         })
     
     df_tstats = pd.DataFrame(results_tstats)
@@ -445,11 +445,11 @@ if uploaded_model1 and uploaded_model2:
     ax.plot(df_tstats["Mois"], df_tstats["Modèle_Tm"], color="white", label="Modèle Tmoy", linestyle="-")
     ax.plot(df_tstats["Mois"], df_tstats["Modèle_Tn"], color="cyan", label="Modèle Tn", linestyle="-")
 
-    ax.plot(df_tstats["Mois"], df_tstats["TRACC_Tx"], color="red", label="TRACC Tx", linestyle="--")
-    ax.plot(df_tstats["Mois"], df_tstats["TRACC_Tm"], color="white", label="TRACC Tmoy", linestyle="--")
-    ax.plot(df_tstats["Mois"], df_tstats["TRACC_Tn"], color="cyan", label="TRACC Tn", linestyle="--")
+    ax.plot(df_tstats["Mois"], df_tstats["Modèle 2_Tx"], color="red", label="Modèle 2 Tx", linestyle="--")
+    ax.plot(df_tstats["Mois"], df_tstats["Modèle 2_Tm"], color="white", label="Modèle 2 Tmoy", linestyle="--")
+    ax.plot(df_tstats["Mois"], df_tstats["Modèle 2_Tn"], color="cyan", label="Modèle 2 Tn", linestyle="--")
 
-    ax.set_title(f"Tn_mois / Tmoy_mois / Tx_mois – Modèle vs TRACC ")
+    ax.set_title(f"Tn_mois / Tmoy_mois / Tx_mois – Modèle vs Modèle 2 ")
     ax.set_ylabel("Température (°C)")
     ax.tick_params(axis='x', rotation=45)
     ax.legend(facecolor="black")
@@ -463,18 +463,18 @@ if uploaded_model1 and uploaded_model2:
     st.write("Tableau Tn_mois / Tmoy_mois / Tx_mois")
     st.dataframe(df_tstats.round(2), hide_index=True)
 
-    # ---- Tableau des différences (Modèle - TRACC) ----
+    # ---- Tableau des différences (Modèle - Modèle 2) ----
     df_diff = pd.DataFrame({
         "Mois": df_tstats["Mois"],
-        "Diff_Tn_mois": df_tstats["Modèle_Tn"] - df_tstats["TRACC_Tn"],
-        "Diff_Tmoy_mois": df_tstats["Modèle_Tm"] - df_tstats["TRACC_Tm"],
-        "Diff_Tx_mois": df_tstats["Modèle_Tx"] - df_tstats["TRACC_Tx"],
+        "Diff_Tn_mois": df_tstats["Modèle_Tn"] - df_tstats["Modèle 2_Tn"],
+        "Diff_Tmoy_mois": df_tstats["Modèle_Tm"] - df_tstats["Modèle 2_Tm"],
+        "Diff_Tx_mois": df_tstats["Modèle_Tx"] - df_tstats["Modèle 2_Tx"],
     })
     
     df_diff_round = df_diff.copy()
     df_diff_round[["Diff_Tn_mois","Diff_Tmoy_mois","Diff_Tx_mois"]] = df_diff_round[["Diff_Tn_mois","Diff_Tmoy_mois","Diff_Tx_mois"]].round(2)
     
-    st.write("Différences Modèle - TRACC (Tn_mois / Tmoy_mois / Tx_mois)")
+    st.write("Différences Modèle - Modèle 2 (Tn_mois / Tmoy_mois / Tx_mois)")
         
     # ---- Coloration avec background_gradient ----
     st.dataframe(
@@ -489,31 +489,31 @@ if uploaded_model1 and uploaded_model2:
     # Comparaison moyenne annuelle
     # =============================
     
-    # Moyenne annuelle sur 12 mois pour TRACC et Modèle
-    mean_TRACC_Tx = df_tstats["TRACC_Tx"].mean()
+    # Moyenne annuelle sur 12 mois pour Modèle 2 et Modèle
+    mean_Modèle 2_Tx = df_tstats["Modèle 2_Tx"].mean()
     mean_Model_Tx = df_tstats["Modèle_Tx"].mean()
     
-    mean_TRACC_Tm = df_tstats["TRACC_Tm"].mean()
+    mean_Modèle 2_Tm = df_tstats["Modèle 2_Tm"].mean()
     mean_Model_Tm = df_tstats["Modèle_Tm"].mean()
     
-    mean_TRACC_Tn = df_tstats["TRACC_Tn"].mean()
+    mean_Modèle 2_Tn = df_tstats["Modèle 2_Tn"].mean()
     mean_Model_Tn = df_tstats["Modèle_Tn"].mean()
     
     # Générer les phrases
-    if mean_TRACC_Tx > mean_Model_Tx:
-        phrase_Tx = "En moyenne, la TRACC est plus chaude que le modèle pour les températures maximales (Tx)."
+    if mean_Modèle 2_Tx > mean_Model_Tx:
+        phrase_Tx = "En moyenne, la Modèle 2 est plus chaude que le modèle pour les températures maximales (Tx)."
     else:
-        phrase_Tx = "En moyenne, le modèle est plus chaud que TRACC pour les températures maximales (Tx)."
+        phrase_Tx = "En moyenne, le modèle est plus chaud que Modèle 2 pour les températures maximales (Tx)."
     
-    if mean_TRACC_Tm > mean_Model_Tm:
-        phrase_Tm = "En moyenne, la TRACC est plus chaude que le modèle pour les températures moyennes (Tmoy)."
+    if mean_Modèle 2_Tm > mean_Model_Tm:
+        phrase_Tm = "En moyenne, la Modèle 2 est plus chaude que le modèle pour les températures moyennes (Tmoy)."
     else:
-        phrase_Tm = "En moyenne, le modèle est plus chaud que TRACC pour les températures moyennes (Tmoy)."
+        phrase_Tm = "En moyenne, le modèle est plus chaud que Modèle 2 pour les températures moyennes (Tmoy)."
     
-    if mean_TRACC_Tn > mean_Model_Tn:
-        phrase_Tn = "En moyenne, la TRACC est plus chaude que le modèle pour les températures minimales (Tn)."
+    if mean_Modèle 2_Tn > mean_Model_Tn:
+        phrase_Tn = "En moyenne, la Modèle 2 est plus chaude que le modèle pour les températures minimales (Tn)."
     else:
-        phrase_Tn = "En moyenne, le modèle est plus chaud que TRACC pour les températures minimales (Tn)."
+        phrase_Tn = "En moyenne, le modèle est plus chaud que Modèle 2 pour les températures minimales (Tn)."
     
     # Stocker dans st.session_state pour pouvoir les réutiliser dans la page Résumé
     st.session_state["resume_temp"] = [phrase_Tx, phrase_Tm, phrase_Tn]
@@ -559,7 +559,7 @@ if uploaded_model1 and uploaded_model2:
     for mois_num in range(1, 13):
         mois = mois_noms[mois_num]
     
-        # ---- extraire hourly pour le mois: TRACC (obs) et modèle (csv) ----
+        # ---- extraire hourly pour le mois: Modèle 2 (obs) et modèle (csv) ----
         obs_hourly = obs_mois_all[mois_num - 1] if len(obs_mois_all) >= mois_num else np.array([])
         idx0 = sum(heures_par_mois[:mois_num - 1])
         idx1 = sum(heures_par_mois[:mois_num])
@@ -607,13 +607,13 @@ if uploaded_model1 and uploaded_model2:
         ax.plot(pct_for_cdf, mod_tm_cdf, linestyle="-", linewidth=2, label="Modèle Tmoy", color=colors["Tm"])
         ax.plot(pct_for_cdf, mod_tn_cdf, linestyle="-", linewidth=2, label="Modèle Tn", color=colors["Tn"])
     
-        # Tracer TRACC
-        ax.plot(pct_for_cdf, obs_tx_cdf, linestyle="--", linewidth=1.7, label="TRACC Tx", color=colors["Tx"])
-        ax.plot(pct_for_cdf, obs_tm_cdf, linestyle="--", linewidth=1.7, label="TRACC Tmoy", color=colors["Tm"])
-        ax.plot(pct_for_cdf, obs_tn_cdf, linestyle="--", linewidth=1.7, label="TRACC Tn", color=colors["Tn"])
+        # Tracer Modèle 2
+        ax.plot(pct_for_cdf, obs_tx_cdf, linestyle="--", linewidth=1.7, label="Modèle 2 Tx", color=colors["Tx"])
+        ax.plot(pct_for_cdf, obs_tm_cdf, linestyle="--", linewidth=1.7, label="Modèle 2 Tmoy", color=colors["Tm"])
+        ax.plot(pct_for_cdf, obs_tn_cdf, linestyle="--", linewidth=1.7, label="Modèle 2 Tn", color=colors["Tn"])
     
         # Mise en forme
-        ax.set_title(f"{mois} — CDF Tn_jour / Tmoy_jour / Tx_jour (Modèle vs TRACC )", color="white")
+        ax.set_title(f"{mois} — CDF Tn_jour / Tmoy_jour / Tx_jour (Modèle vs Modèle 2 )", color="white")
         ax.set_xlabel("Percentile", color="white")
         ax.set_ylabel("Température (°C)", color="white")
         ax.tick_params(colors="white")
@@ -629,11 +629,11 @@ if uploaded_model1 and uploaded_model2:
         # ---- Tableau des percentiles ----
         tab = pd.DataFrame({
             "Percentile": [f"P{p}" for p in pct_table],
-            "TRACC_Tn": np.round(pct_table_values(obs_tn, pct_table), 2),
+            "Modèle 2_Tn": np.round(pct_table_values(obs_tn, pct_table), 2),
             "Mod_Tn": np.round(pct_table_values(mod_tn, pct_table), 2),
-            "TRACC_Tm": np.round(pct_table_values(obs_tm, pct_table), 2),
+            "Modèle 2_Tm": np.round(pct_table_values(obs_tm, pct_table), 2),
             "Mod_Tm": np.round(pct_table_values(mod_tm, pct_table), 2),
-            "TRACC_Tx": np.round(pct_table_values(obs_tx, pct_table), 2),
+            "Modèle 2_Tx": np.round(pct_table_values(obs_tx, pct_table), 2),
             "Mod_Tx": np.round(pct_table_values(mod_tx, pct_table), 2),
         })
     
@@ -644,12 +644,12 @@ if uploaded_model1 and uploaded_model2:
         styler = tab.style.format({col: "{:.2f}" for col in num_cols})
         st.dataframe(styler, hide_index=True)
     
-        # ---- Tableau des différences (Modèle - TRACC) ----
+        # ---- Tableau des différences (Modèle - Modèle 2) ----
         df_diff = pd.DataFrame({
             "Percentile": tab["Percentile"],
-            "Diff_Tn_jour": tab["Mod_Tn"] - tab["TRACC_Tn"],
-            "Diff_Tm_jour": tab["Mod_Tm"] - tab["TRACC_Tm"],
-            "Diff_Tx_jour": tab["Mod_Tx"] - tab["TRACC_Tx"],
+            "Diff_Tn_jour": tab["Mod_Tn"] - tab["Modèle 2_Tn"],
+            "Diff_Tm_jour": tab["Mod_Tm"] - tab["Modèle 2_Tm"],
+            "Diff_Tx_jour": tab["Mod_Tx"] - tab["Modèle 2_Tx"],
         })
         
         # Redéfinir num_cols_diff avant l'utilisation
@@ -659,7 +659,7 @@ if uploaded_model1 and uploaded_model2:
         df_diff[num_cols_diff] = df_diff[num_cols_diff].apply(pd.to_numeric, errors="coerce").round(2)
 
     
-        st.write(f"{mois} — Différences Modèle - TRACC (Tn_jour / Tmoy_jour / Tx_jour)")
+        st.write(f"{mois} — Différences Modèle - Modèle 2 (Tn_jour / Tmoy_jour / Tx_jour)")
     
         df_diff_styled = (
             df_diff.style
@@ -679,26 +679,26 @@ if uploaded_model1 and uploaded_model2:
     tn_seuil = st.number_input("Seuil Tn_jour (°C) pour nuits tropicales :", min_value=-50.0, max_value=60.0, value=20.0, step=1.0) 
     
     # Préparer listes pour stocker les valeurs par mois
-    jours_chauds_tracc = []
+    jours_chauds_Modèle 2 = []
     jours_chauds_modele = []
-    nuits_tropicales_tracc = []
+    nuits_tropicales_Modèle 2 = []
     nuits_tropicales_modele = []
     
-    jours_chauds_total_tracc = 0
+    jours_chauds_total_Modèle 2 = 0
     jours_chauds_total_modele = 0
-    nuits_tropicales_total_tracc = 0
+    nuits_tropicales_total_Modèle 2 = 0
     nuits_tropicales_total_modele = 0
     
     for mois_num in range(1, 13):
-        # TRACC
+        # Modèle 2
         obs_tx_jour = Tx_jour_all[mois_num - 1]
         obs_tn_jour = Tn_jour_all[mois_num - 1]
         jours_tx = np.sum(obs_tx_jour > tx_seuil)
         nuits_trop = np.sum(obs_tn_jour > tn_seuil)
-        jours_chauds_tracc.append(jours_tx)
-        nuits_tropicales_tracc.append(nuits_trop)
-        jours_chauds_total_tracc += jours_tx
-        nuits_tropicales_total_tracc += nuits_trop
+        jours_chauds_Modèle 2.append(jours_tx)
+        nuits_tropicales_Modèle 2.append(nuits_trop)
+        jours_chauds_total_Modèle 2 += jours_tx
+        nuits_tropicales_total_Modèle 2 += nuits_trop
     
         # Modèle
         mod_tx_jour = Tx_jour_mod_all[mois_num - 1]
@@ -716,7 +716,7 @@ if uploaded_model1 and uploaded_model2:
     
     # ---- Diagramme jours chauds ----
     fig, ax = plt.subplots(figsize=(14, 4))
-    ax.bar(x - 0.25, jours_chauds_tracc, width=0.5, color=couleur_TRACC, label="TRACC")
+    ax.bar(x - 0.25, jours_chauds_Modèle 2, width=0.5, color=couleur_Modèle 2, label="Modèle 2")
     ax.bar(x + 0.25, jours_chauds_modele, width=0.5, color=couleur_modele, label="Modèle")
     ax.set_xticks(x)
     ax.set_xticklabels(mois_labels, rotation=45)
@@ -729,7 +729,7 @@ if uploaded_model1 and uploaded_model2:
     
     # ---- Diagramme nuits tropicales ----
     fig, ax = plt.subplots(figsize=(14, 4))
-    ax.bar(x - 0.25, nuits_tropicales_tracc, width=0.5, color=couleur_TRACC, label="TRACC")
+    ax.bar(x - 0.25, nuits_tropicales_Modèle 2, width=0.5, color=couleur_Modèle 2, label="Modèle 2")
     ax.bar(x + 0.25, nuits_tropicales_modele, width=0.5, color=couleur_modele, label="Modèle")
     ax.set_xticks(x)
     ax.set_xticklabels(mois_labels, rotation=45)
@@ -741,24 +741,24 @@ if uploaded_model1 and uploaded_model2:
     plt.close(fig)
     
     # ---- Affichage des totaux ----
-    st.markdown(f"**Total jours chauds TRACC :** {jours_chauds_total_tracc}, **Modèle :** {jours_chauds_total_modele}")
-    st.markdown(f"**Total nuits tropicales TRACC :** {nuits_tropicales_total_tracc}, **Modèle :** {nuits_tropicales_total_modele}")
+    st.markdown(f"**Total jours chauds Modèle 2 :** {jours_chauds_total_Modèle 2}, **Modèle :** {jours_chauds_total_modele}")
+    st.markdown(f"**Total nuits tropicales Modèle 2 :** {nuits_tropicales_total_Modèle 2}, **Modèle :** {nuits_tropicales_total_modele}")
 
     # =============================
     # Comparaison annuelle jours chauds / nuits tropicales
     # =============================
     
     # Jours chauds
-    if jours_chauds_total_tracc > jours_chauds_total_modele:
-        phrase_jours = f"TRACC enregistre plus de jours chauds (Tx>{tx_seuil}°C) sur l'année ({jours_chauds_total_tracc}) que le modèle ({jours_chauds_total_modele})."
+    if jours_chauds_total_Modèle 2 > jours_chauds_total_modele:
+        phrase_jours = f"Modèle 2 enregistre plus de jours chauds (Tx>{tx_seuil}°C) sur l'année ({jours_chauds_total_Modèle 2}) que le modèle ({jours_chauds_total_modele})."
     else:
-        phrase_jours = f"Le modèle enregistre plus de jours chauds (Tx>{tx_seuil}°C) sur l'année ({jours_chauds_total_modele}) que TRACC ({jours_chauds_total_tracc})."
+        phrase_jours = f"Le modèle enregistre plus de jours chauds (Tx>{tx_seuil}°C) sur l'année ({jours_chauds_total_modele}) que Modèle 2 ({jours_chauds_total_Modèle 2})."
     
     # Nuits tropicales
-    if nuits_tropicales_total_tracc > nuits_tropicales_total_modele:
-        phrase_nuits = f"TRACC enregistre plus de nuits tropicales (Tn>{tn_seuil}°C) sur l'année ({nuits_tropicales_total_tracc}) que le modèle ({nuits_tropicales_total_modele})."
+    if nuits_tropicales_total_Modèle 2 > nuits_tropicales_total_modele:
+        phrase_nuits = f"Modèle 2 enregistre plus de nuits tropicales (Tn>{tn_seuil}°C) sur l'année ({nuits_tropicales_total_Modèle 2}) que le modèle ({nuits_tropicales_total_modele})."
     else:
-        phrase_nuits = f"Le modèle enregistre plus de nuits tropicales (Tn>{tn_seuil}°C) sur l'année ({nuits_tropicales_total_modele}) que TRACC ({nuits_tropicales_total_tracc})."
+        phrase_nuits = f"Le modèle enregistre plus de nuits tropicales (Tn>{tn_seuil}°C) sur l'année ({nuits_tropicales_total_modele}) que Modèle 2 ({nuits_tropicales_total_Modèle 2})."
     
     # Stocker dans st.session_state pour la page Résumé
     st.session_state["resume_chaud_nuit"] = [phrase_jours, phrase_nuits]
@@ -772,7 +772,7 @@ if uploaded_model1 and uploaded_model2:
     # Calcul DJC (chauffage) et DJF (froid)
     # ============================
     
-    st.subheader("DJC (chauffage) et DJF (froid) journaliers — TRACC vs Modèle")
+    st.subheader("DJC (chauffage) et DJF (froid) journaliers — Modèle 2 vs Modèle")
     
     T_base_chauffage = float(st.text_input("Base DJC (°C) — chauffage", "19"))
     T_base_froid = float(st.text_input("Base DJF (°C) — refroidissement", "23"))
@@ -790,22 +790,22 @@ if uploaded_model1 and uploaded_model2:
         mois = mois_noms_sans_num[mois_num]
     
         # Séries journalières déjà calculées
-        Tx_tracc = Tx_jour_all[mois_num-1]
-        Tn_tracc = Tn_jour_all[mois_num-1]
+        Tx_Modèle 2 = Tx_jour_all[mois_num-1]
+        Tn_Modèle 2 = Tn_jour_all[mois_num-1]
     
         idx0 = sum(heures_par_mois[:mois_num-1])
         idx1 = sum(heures_par_mois[:mois_num])
         model_hourly = model_values[idx0:idx1]
         Tx_mod, Tm_mod, Tn_mod = daily_stats_from_hourly(model_hourly)
     
-        DJC_tracc_jours, DJF_tracc_jours = [], []
+        DJC_Modèle 2_jours, DJF_Modèle 2_jours = [], []
         DJC_mod_jours, DJF_mod_jours = [], []
     
-        n_jours = len(Tx_tracc)
+        n_jours = len(Tx_Modèle 2)
         for j in range(n_jours):
-            Tm_tracc = (Tx_tracc[j] + Tn_tracc[j]) / 2
-            DJC_tracc_jours.append(max(0, T_base_chauffage - Tm_tracc))
-            DJF_tracc_jours.append(max(0, Tm_tracc - T_base_froid))
+            Tm_Modèle 2 = (Tx_Modèle 2[j] + Tn_Modèle 2[j]) / 2
+            DJC_Modèle 2_jours.append(max(0, T_base_chauffage - Tm_Modèle 2))
+            DJF_Modèle 2_jours.append(max(0, Tm_Modèle 2 - T_base_froid))
     
             if j < len(Tx_mod):
                 Tm_mod = (Tx_mod[j] + Tn_mod[j]) / 2
@@ -815,22 +815,22 @@ if uploaded_model1 and uploaded_model2:
                 DJC_mod_jours.append(0)
                 DJF_mod_jours.append(0)
     
-        DJC_tracc_sum = float(np.nansum(DJC_tracc_jours))
+        DJC_Modèle 2_sum = float(np.nansum(DJC_Modèle 2_jours))
         DJC_mod_sum = float(np.nansum(DJC_mod_jours))
-        DJF_tracc_sum = float(np.nansum(DJF_tracc_jours))
+        DJF_Modèle 2_sum = float(np.nansum(DJF_Modèle 2_jours))
         DJF_mod_sum = float(np.nansum(DJF_mod_jours))
     
         results_djc.append({
             "Mois": mois,
-            "TRACC": DJC_tracc_sum,
+            "Modèle 2": DJC_Modèle 2_sum,
             "Modèle": DJC_mod_sum,
-            "Différence": DJC_mod_sum - DJC_tracc_sum
+            "Différence": DJC_mod_sum - DJC_Modèle 2_sum
         })
         results_djf.append({
             "Mois": mois,
-            "TRACC": DJF_tracc_sum,
+            "Modèle 2": DJF_Modèle 2_sum,
             "Modèle": DJF_mod_sum,
-            "Différence": DJF_mod_sum - DJF_tracc_sum
+            "Différence": DJF_mod_sum - DJF_Modèle 2_sum
         })
     
     df_DJC = pd.DataFrame(results_djc).fillna(0)
@@ -838,7 +838,7 @@ if uploaded_model1 and uploaded_model2:
     
     # Convertir explicitement les colonnes numériques en float
     for df in [df_DJC, df_DJF]:
-        for col in ["TRACC", "Modèle", "Différence"]:
+        for col in ["Modèle 2", "Modèle", "Différence"]:
             df[col] = df[col].astype(float)
     
     # --------------------------
@@ -867,14 +867,14 @@ if uploaded_model1 and uploaded_model2:
 
     for df, titre in zip([df_DJC, df_DJF], ["DJC", "DJF"]):
         fig, ax = plt.subplots(figsize=(14, 4))
-        ax.bar(df.index - 0.25, df["TRACC"], width=0.5,
-               color=couleur_TRACC, label="TRACC")
+        ax.bar(df.index - 0.25, df["Modèle 2"], width=0.5,
+               color=couleur_Modèle 2, label="Modèle 2")
         ax.bar(df.index + 0.25, df["Modèle"], width=0.5,
                color=couleur_modele, label="Modèle")
     
         ax.set_xticks(df.index)
         ax.set_xticklabels(df["Mois"])
-        ax.set_title(f"{titre} mensuel — Modèle vs TRACC")
+        ax.set_title(f"{titre} mensuel — Modèle vs Modèle 2")
         ax.set_ylabel(f"{titre} (°C·jour)")
         ax.set_xlabel("Mois")
         ax.legend()
@@ -888,35 +888,35 @@ if uploaded_model1 and uploaded_model2:
     # --------------------------
     # Somme annuelle DJC et DJF
     # --------------------------
-    total_DJC_TRACC = df_DJC["TRACC"].sum()
+    total_DJC_Modèle 2 = df_DJC["Modèle 2"].sum()
     total_DJC_modele = df_DJC["Modèle"].sum()
     
-    total_DJF_TRACC = df_DJF["TRACC"].sum()
+    total_DJF_Modèle 2 = df_DJF["Modèle 2"].sum()
     total_DJF_modele = df_DJF["Modèle"].sum()
     
     st.subheader("Sommes annuelles")
-    st.write(f"DJC annuel : TRACC = {total_DJC_TRACC:.0f}    /    Modèle = {total_DJC_modele:.0f}")
-    st.write(f"DJF annuel : TRACC = {total_DJF_TRACC:.0f}    /    Modèle = {total_DJF_modele:.0f}")
+    st.write(f"DJC annuel : Modèle 2 = {total_DJC_Modèle 2:.0f}    /    Modèle = {total_DJC_modele:.0f}")
+    st.write(f"DJF annuel : Modèle 2 = {total_DJF_Modèle 2:.0f}    /    Modèle = {total_DJF_modele:.0f}")
 
     # =============================
     # Résumé automatique DJC / DJF
     # =============================
     
     # DJC (chauffage)
-    if total_DJC_TRACC > total_DJC_modele:
-        phrase_djc = f"TRACC a une demande de chauffage annuelle plus élevée ({total_DJC_TRACC:.0f} °C·jour) que le modèle ({total_DJC_modele:.0f} °C·jour)."
-    elif total_DJC_modele > total_DJC_TRACC:
-        phrase_djc = f"Le modèle a une demande de chauffage annuelle plus élevée ({total_DJC_modele:.0f} °C·jour) que TRACC ({total_DJC_TRACC:.0f} °C·jour)."
+    if total_DJC_Modèle 2 > total_DJC_modele:
+        phrase_djc = f"Modèle 2 a une demande de chauffage annuelle plus élevée ({total_DJC_Modèle 2:.0f} °C·jour) que le modèle ({total_DJC_modele:.0f} °C·jour)."
+    elif total_DJC_modele > total_DJC_Modèle 2:
+        phrase_djc = f"Le modèle a une demande de chauffage annuelle plus élevée ({total_DJC_modele:.0f} °C·jour) que Modèle 2 ({total_DJC_Modèle 2:.0f} °C·jour)."
     else:
-        phrase_djc = "TRACC et le modèle ont la même demande de chauffage annuelle."
+        phrase_djc = "Modèle 2 et le modèle ont la même demande de chauffage annuelle."
     
     # DJF (refroidissement)
-    if total_DJF_TRACC > total_DJF_modele:
-        phrase_djf = f"TRACC a une demande de refroidissement annuelle plus élevée ({total_DJF_TRACC:.0f} °C·jour) que le modèle ({total_DJF_modele:.0f} °C·jour)."
-    elif total_DJF_modele > total_DJF_TRACC:
-        phrase_djf = f"Le modèle a une demande de refroidissement annuelle plus élevée ({total_DJF_modele:.0f} °C·jour) que TRACC ({total_DJF_TRACC:.0f} °C·jour)."
+    if total_DJF_Modèle 2 > total_DJF_modele:
+        phrase_djf = f"Modèle 2 a une demande de refroidissement annuelle plus élevée ({total_DJF_Modèle 2:.0f} °C·jour) que le modèle ({total_DJF_modele:.0f} °C·jour)."
+    elif total_DJF_modele > total_DJF_Modèle 2:
+        phrase_djf = f"Le modèle a une demande de refroidissement annuelle plus élevée ({total_DJF_modele:.0f} °C·jour) que Modèle 2 ({total_DJF_Modèle 2:.0f} °C·jour)."
     else:
-        phrase_djf = "TRACC et le modèle ont la même demande de refroidissement annuelle."
+        phrase_djf = "Modèle 2 et le modèle ont la même demande de refroidissement annuelle."
     
     # Stocker dans st.session_state pour la page Résumé
     st.session_state["resume_djc_djf"] = [phrase_djc, phrase_djf]
@@ -931,7 +931,7 @@ if uploaded_model1 and uploaded_model2:
     # ======================================
     #  COURBES DES PERCENTILES PAR MOIS
     # ======================================
-    st.subheader("Évolution mensuelle des percentiles (Modèle vs TRACC)")
+    st.subheader("Évolution mensuelle des percentiles (Modèle vs Modèle 2)")
 
     df_percentiles_all = []
     percentiles_list2 = [10,50,90]
@@ -970,10 +970,10 @@ if uploaded_model1 and uploaded_model2:
     i=0
     for p in percentiles_list2:
         dfp = df_percentiles_ordered[df_percentiles_ordered["Pnum"] == p]
-        # TRACC : ligne pointillée
+        # Modèle 2 : ligne pointillée
         ax.plot(
             dfp["Mois"], dfp["Obs"],
-            linestyle="--", label=f"TRACC P{p}", color=colors_perc[i]
+            linestyle="--", label=f"Modèle 2 P{p}", color=colors_perc[i]
         )
         # Modèle : ligne pleinne
         ax.plot(
@@ -982,7 +982,7 @@ if uploaded_model1 and uploaded_model2:
         )
         i+=1
     
-    ax.set_title(f"Percentiles {percentiles_list} – Modèle vs TRACC ")
+    ax.set_title(f"Percentiles {percentiles_list} – Modèle vs Modèle 2 ")
     ax.set_ylabel("Température (°C)")
     ax.tick_params(axis="x", rotation=45)
     ax.legend(ncol=2, facecolor="black")
@@ -1003,7 +1003,7 @@ if uploaded_model1 and uploaded_model2:
 
         fig, ax = plt.subplots(figsize=(12, 4))
         ax.plot(np.linspace(0, 100, 100), mod_percentiles_100, label="Modèle", color=couleur_modele)
-        ax.plot(np.linspace(0, 100, 100), obs_percentiles_100, label=f"TRACC ", color=couleur_TRACC)
+        ax.plot(np.linspace(0, 100, 100), obs_percentiles_100, label=f"Modèle 2 ", color=couleur_Modèle 2)
         ax.set_title(f"{mois} - Fonction de répartition", color="white")
         ax.set_xlabel("Percentile", color="white")
         ax.set_ylabel("Température (°C)", color="white")
@@ -1017,7 +1017,7 @@ if uploaded_model1 and uploaded_model2:
         mod_p = np.percentile(mod_mois, percentiles_list)
         df_p = pd.DataFrame({
             "Percentile": [f"P{p}" for p in percentiles_list],
-            f"TRACC ": obs_p,
+            f"Modèle 2 ": obs_p,
             "Modèle": mod_p
         }).round(2)
         st.write(f"{mois} - Percentiles")
@@ -1035,7 +1035,7 @@ if uploaded_model1 and uploaded_model2:
     st.subheader("Fonction de répartition annuelle (CDF)")
     
     # Regroupement annuel
-    obs_annual = np.concatenate(obs_mois_all)         # Observations TRACC - toutes les heures de l'année
+    obs_annual = np.concatenate(obs_mois_all)         # Observations Modèle 2 - toutes les heures de l'année
     mod_annual = model_values                         # Modèle : déjà toutes les heures
     
     # Percentiles pour CDF (0–100)
@@ -1046,7 +1046,7 @@ if uploaded_model1 and uploaded_model2:
     # ----- Plot de la CDF annuelle -----
     fig, ax = plt.subplots(figsize=(12, 4))
     ax.plot(percentiles_cdf, mod_percentiles_annual, label="Modèle", color=couleur_modele)
-    ax.plot(percentiles_cdf, obs_percentiles_annual, label=f"TRACC ", color=couleur_TRACC)
+    ax.plot(percentiles_cdf, obs_percentiles_annual, label=f"Modèle 2 ", color=couleur_Modèle 2)
     
     ax.set_title("Année entière - Fonction de répartition", color="white")
     ax.set_xlabel("Percentile", color="white")
@@ -1066,7 +1066,7 @@ if uploaded_model1 and uploaded_model2:
     
     df_p_annual = pd.DataFrame({
         "Percentile": [f"P{p}" for p in percentiles_list],
-        f"TRACC ": obs_p_annual,
+        f"Modèle 2 ": obs_p_annual,
         "Modèle": mod_p_annual
     }).round(2)
     
@@ -1074,7 +1074,7 @@ if uploaded_model1 and uploaded_model2:
     st.dataframe(df_p_annual, hide_index=True)
 
 
-    st.subheader(f"Bilan modèle vs TRACC  (Modèle - TRACC)") 
+    st.subheader(f"Bilan modèle vs Modèle 2  (Modèle - Modèle 2)") 
     # Création du DataFrame
     df_bilan = pd.DataFrame(df_percentiles_all).round(2)
     df_bilan["Ecart"] = df_bilan["Mod"] - df_bilan["Obs"]
