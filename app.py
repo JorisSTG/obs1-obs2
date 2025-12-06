@@ -228,7 +228,7 @@ if uploaded_model1 and uploaded_model2:
             "Temp_Num": bin_labels,
             "Température": bin_labels.astype(str),
             "Modèle 2": obs_counts,
-            "Modèle": mod_counts
+            "Modèle 1": mod_counts
         }).sort_values("Temp_Num")
 
         # Création du plot
