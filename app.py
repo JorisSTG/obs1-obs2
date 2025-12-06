@@ -20,7 +20,7 @@ plt.rcParams.update({
 st.title("Comparaison : Modèle 1 / Modèle 2")
 st.markdown(
     """
-    L’objectif de cette application est d’évaluer la précision de données météorologiques en les comparant à des données de référence.
+    L’objectif de cette application est d’évaluer la précision et la cohérence entre deux jeux de données météorologie (température uniquement) à des fins de simulations STD.
     """,
     unsafe_allow_html=True
 )
