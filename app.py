@@ -500,7 +500,7 @@ if uploaded_model1 and uploaded_model2:
     mean_Modèle_2_Tm = df_tstats["Modèle 2_Tm"].mean()
     mean_Modèle_1_Tm = df_tstats["Modèle 1_Tm"].mean()
     
-    mean_Modèle2_Tn = df_tstats["Modèle 2_Tn"].mean()
+    mean_Modèle_2_Tn = df_tstats["Modèle 2_Tn"].mean()
     mean_Modèle_1_Tn = df_tstats["Modèle 1_Tn"].mean()
     
     # Générer les phrases
