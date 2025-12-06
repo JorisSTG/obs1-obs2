@@ -833,7 +833,7 @@ if uploaded_model1 and uploaded_model2:
         results_djf.append({
             "Mois": mois,
             "Modèle 1": DJF_mod_sum,
-            "Modèle 2": DJF_Modèle 2_sum,
+            "Modèle 2": DJF_Modèle_2_sum,
             "Différence": DJF_mod_sum - DJF_Modèle_2_sum
         })
     
