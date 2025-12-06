@@ -753,13 +753,13 @@ if uploaded_model1 and uploaded_model2:
     # =============================
     
     # Jours chauds
-    if jours_chauds_total_Modèle 2 > jours_chauds_total_modele:
+    if jours_chauds_total_Modèle_2 > jours_chauds_total_modele:
         phrase_jours = f"Le modèle 2 enregistre plus de jours chauds (Tx>{tx_seuil}°C) sur l'année ({jours_chauds_total_Modèle_2}) que le modèle ({jours_chauds_total_modele})."
     else:
         phrase_jours = f"Le modèle 1 enregistre plus de jours chauds (Tx>{tx_seuil}°C) sur l'année ({jours_chauds_total_modele}) que Modèle 2 ({jours_chauds_total_Modèle_2})."
     
     # Nuits tropicales
-    if nuits_tropicales_total_Modèle 2 > nuits_tropicales_total_modele:
+    if nuits_tropicales_total_Modèle_2 > nuits_tropicales_total_modele:
         phrase_nuits = f"Le modèle 2 enregistre plus de nuits tropicales (Tn>{tn_seuil}°C) sur l'année ({nuits_tropicales_total_Modèle_2}) que le modèle 1 ({nuits_tropicales_total_modele})."
     else:
         phrase_nuits = f"Le modèle 1 enregistre plus de nuits tropicales (Tn>{tn_seuil}°C) sur l'année ({nuits_tropicales_total_modele}) que le modèle 2 ({nuits_tropicales_total_Modèle_2})."
