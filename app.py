@@ -295,16 +295,16 @@ if uploaded_model1 and uploaded_model2:
     df_plot_year = pd.DataFrame({
         "Temp_Num": bin_labels,
         "Température": bin_labels.astype(str),
-        "Différence absolue modele": diff_counts_annual_modele,
-        "Différence absolue Modèle 2": diff_counts_annual_Modèle 2
+        "Différence absolue du modèle 1": diff_counts_annual_modele,
+        "Différence absolue du modèle 2": diff_counts_annual_TRACC
     }).sort_values("Temp_Num")
 
     # Plot
     fig, ax = plt.subplots(figsize=(16, 5))
-    ax.bar(df_plot_year["Temp_Num"], df_plot_year["Différence absolue modele"], width=0.8,
+    ax.bar(df_plot_year["Temp_Num"], df_plot_year["Différence absolue modele du modèle 1"], width=0.8,
            label="Différence : Modèle 1 > Modèle 2", color=couleur_modele)
 
-    ax.bar(df_plot_year["Temp_Num"], df_plot_year["Différence absolue Modèle 2"], width=0.8,
+    ax.bar(df_plot_year["Temp_Num"], df_plot_year["Différence absolue du modèle 2"], width=0.8,
            label="Différence : Modèle 1 < Modèle 2", color=couleur_TRACC)
 
     ax.set_title("Année entière - Différence en heures par seuil de température")
