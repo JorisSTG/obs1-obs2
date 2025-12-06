@@ -338,19 +338,19 @@ if uploaded_model1 and uploaded_model2:
     heures_TRACC_chaud = np.sum(obs_hourly_annual > tx_seuil_chaud)
     heures_modele_chaud = np.sum(mod_hourly_annual > tx_seuil_chaud)
     
-    if heures_Modèle 2_chaud > heures_modele_chaud:
-        phrase_tx_chaud = f"Modèle 2 a plus d'heures avec une T>{tx_seuil_chaud}°C ({heures_Modèle 2_chaud}) que le modèle ({heures_modele_chaud})."
+    if heures_TRACC > heures_modele_chaud:
+        phrase_tx_chaud = f"Le modèle 2 a plus d'heures avec une T>{tx_seuil_chaud}°C ({heures_Modèle 2_chaud}) que le modèle 1 ({heures_modele_chaud})."
     else:
-        phrase_tx_chaud = f"Le modèle a plus d'heures avec une T>{tx_seuil_chaud}°C ({heures_modele_chaud}) que Modèle 2 ({heures_Modèle 2_chaud})."
+        phrase_tx_chaud = f"Le modèle 1 a plus d'heures avec une T>{tx_seuil_chaud}°C ({heures_modele_chaud}) que le modèle 2 ({heures_TRACC_chaud})."
 
     tn_seuil_froid = 5
     heures_Modèle 2_froid = np.sum(obs_hourly_annual < tn_seuil_froid)
     heures_modele_froid = np.sum(mod_hourly_annual < tn_seuil_froid)
     
-    if heures_Modèle 2_froid > heures_modele_chaud:
-        phrase_tn_froid = f"Le modèle a plus d'heures avec une T<{tn_seuil_froid}°C ({heures_modele_froid}) que Modèle 2 ({heures_Modèle 2_froid})."
+    if heures_TRACC_froid > heures_modele_chaud:
+        phrase_tn_froid = f"Le modèle 1 a plus d'heures avec une T<{tn_seuil_froid}°C ({heures_modele_froid}) que le modèle 2 ({heures_TRACC_froid})."
     else:
-        phrase_tn_froid = f"Modèle 2 a plus d'heures avec une T<{tn_seuil_froid}°C ({heures_Modèle 2_froid}) que le modèle ({heures_modele_froid})."
+        phrase_tn_froid = f"Le modèle 2 a plus d'heures avec une T<{tn_seuil_froid}°C ({heures_Modèle 2_froid}) que le modèle 1 ({heures_modele_froid})."
 
     # Stocker dans st.session_state pour la page Résumé
     st.session_state["resume_hist"] = [phrase_tx_chaud, phrase_tn_froid]
