@@ -335,7 +335,7 @@ if uploaded_model1 and uploaded_model2:
     
     # Comparaison pour les températures élevées
     tx_seuil_chaud = 25
-    heures_Modèle 2_chaud = np.sum(obs_hourly_annual > tx_seuil_chaud)
+    heures_TRACC_chaud = np.sum(obs_hourly_annual > tx_seuil_chaud)
     heures_modele_chaud = np.sum(mod_hourly_annual > tx_seuil_chaud)
     
     if heures_Modèle 2_chaud > heures_modele_chaud:
