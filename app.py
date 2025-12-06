@@ -30,7 +30,7 @@ st.markdown(
 heures_par_mois = [744, 672, 744, 720, 744, 720, 744, 744, 720, 744, 720, 744]
 percentiles_list = [10, 25, 50, 75, 90]
 couleur_modele = "goldenrod"
-couleur_Modèle 2 = "lightgray"
+couleur_TRACC = "lightgray"
 vmaxT = 5
 vminT = -5
 vmaxP = 100
@@ -149,9 +149,9 @@ if uploaded_model1 and uploaded_model2:
             stats_sup.append({
                 "Mois": mois,
                 "Seuil (°C)": f"{seuil}",
-                "Heures Modèle": nb_heures_mod,
+                "Heures Modèle 1": nb_heures_mod,
                 "Heures Modèle 2": heures_obs,
-                "Ecart (Modèle - Modèle 2)": ecart
+                "Ecart (Modèle 1 - Modèle 2)": ecart
             })
 
         # Seuils inférieurs
@@ -162,9 +162,9 @@ if uploaded_model1 and uploaded_model2:
             stats_inf.append({
                 "Mois": mois,
                 "Seuil (°C)": f"{seuil}",
-                "Heures Modèle": nb_heures_mod,
+                "Heures Modèle 1": nb_heures_mod,
                 "Heures Modèle 2": heures_obs,
-                "Ecart (Modèle - Modèle 2)": ecart
+                "Ecart (Modèle 1 - Modèle 2)": ecart
             })
 
     # Création des DataFrames
@@ -173,14 +173,14 @@ if uploaded_model1 and uploaded_model2:
 
     # Conversion en int
     for df in [df_sup, df_inf]:
-        df["Heures Modèle"] = df["Heures Modèle"].astype(int)
+        df["Heures Modèle"] = df["Heures Modèle 1"].astype(int)
         df["Heures Modèle 2"] = df["Heures Modèle 2"].astype(int)
-        df["Ecart (Modèle - Modèle 2)"] = df["Ecart (Modèle - Modèle 2)"].astype(int)
+        df["Ecart (Modèle - Modèle 2)"] = df["Ecart (Modèle 1 - Modèle 2)"].astype(int)
 
     # Style : seuils supérieurs → rouge = plus chaud
     df_sup_styled = (
         df_sup.style
-        .background_gradient(subset=["Ecart (Modèle - Modèle 2)"], cmap="bwr", vmin=vminH, vmax=vmaxH, axis=None)
+        .background_gradient(subset=["Ecart (Modèle 1 - Modèle 2)"], cmap="bwr", vmin=vminH, vmax=vmaxH, axis=None)
     )
     st.subheader("Nombre d'heures supérieur au(x) seuil(s)")
     st.dataframe(df_sup_styled, hide_index=True)
@@ -188,7 +188,7 @@ if uploaded_model1 and uploaded_model2:
     # Style : seuils inférieurs → rouge = plus froid
     df_inf_styled = (
         df_inf.style
-        .background_gradient(subset=["Ecart (Modèle - Modèle 2)"], cmap="bwr_r", vmin=vminH, vmax=vmaxH, axis=None)
+        .background_gradient(subset=["Ecart (Modèle 1 - Modèle 2)"], cmap="bwr_r", vmin=vminH, vmax=vmaxH, axis=None)
     )
     st.subheader("Nombre d'heures inférieur au(x) seuil(s)")
     st.dataframe(df_inf_styled, hide_index=True)
@@ -233,8 +233,8 @@ if uploaded_model1 and uploaded_model2:
 
         # Création du plot
         fig, ax = plt.subplots(figsize=(14, 4))
-        ax.bar(df_plot["Temp_Num"] - 0.25, df_plot["Modèle 2"], width=0.5, label="Modèle 2", color=couleur_Modèle 2)
-        ax.bar(df_plot["Temp_Num"] + 0.25, df_plot["Modèle"], width=0.5, label="Modèle 1", color=couleur_modele)
+        ax.bar(df_plot["Temp_Num"] - 0.25, df_plot["Modèle 2"], width=0.5, label="Modèle 2", color=couleur_TRACC)
+        ax.bar(df_plot["Temp_Num"] + 0.25, df_plot["Modèle 1"], width=0.5, label="Modèle 1", color=couleur_modele)
         ax.set_title(f"{mois} - Durée en heure par seuil de température")
         ax.set_xlabel("Température (°C)")
         ax.set_ylabel("Durée en heure")
@@ -280,7 +280,7 @@ if uploaded_model1 and uploaded_model2:
     # Plot
     fig, ax = plt.subplots(figsize=(16, 5))
     ax.bar(df_plot_year["Temp_Num"] - 0.25, df_plot_year["Modèle 2"], width=0.5,
-           label="Modèle 2", color=couleur_Modèle 2)
+           label="Modèle 2", color=couleur_TRACC)
     ax.bar(df_plot_year["Temp_Num"] + 0.25, df_plot_year["Modèle"], width=0.5,
            label="Modèle 1", color=couleur_modele)
     fig_hist_year = fig
@@ -305,7 +305,7 @@ if uploaded_model1 and uploaded_model2:
            label="Différence : Modèle 1 > Modèle 2", color=couleur_modele)
 
     ax.bar(df_plot_year["Temp_Num"], df_plot_year["Différence absolue Modèle 2"], width=0.8,
-           label="Différence : Modèle 1 < Modèle 2", color=couleur_Modèle 2)
+           label="Différence : Modèle 1 < Modèle 2", color=couleur_TRACC)
 
     ax.set_title("Année entière - Différence en heures par seuil de température")
     ax.set_xlabel("Température (°C)")
@@ -716,7 +716,7 @@ if uploaded_model1 and uploaded_model2:
     
     # ---- Diagramme jours chauds ----
     fig, ax = plt.subplots(figsize=(14, 4))
-    ax.bar(x - 0.25, jours_chauds_Modèle 2, width=0.5, color=couleur_Modèle 2, label="Modèle 2")
+    ax.bar(x - 0.25, jours_chauds_Modèle 2, width=0.5, color=couleur_TRACC, label="Modèle 2")
     ax.bar(x + 0.25, jours_chauds_modele, width=0.5, color=couleur_modele, label="Modèle")
     ax.set_xticks(x)
     ax.set_xticklabels(mois_labels, rotation=45)
@@ -729,7 +729,7 @@ if uploaded_model1 and uploaded_model2:
     
     # ---- Diagramme nuits tropicales ----
     fig, ax = plt.subplots(figsize=(14, 4))
-    ax.bar(x - 0.25, nuits_tropicales_Modèle 2, width=0.5, color=couleur_Modèle 2, label="Modèle 2")
+    ax.bar(x - 0.25, nuits_tropicales_Modèle 2, width=0.5, color=couleur_TRACC, label="Modèle 2")
     ax.bar(x + 0.25, nuits_tropicales_modele, width=0.5, color=couleur_modele, label="Modèle")
     ax.set_xticks(x)
     ax.set_xticklabels(mois_labels, rotation=45)
@@ -868,9 +868,9 @@ if uploaded_model1 and uploaded_model2:
     for df, titre in zip([df_DJC, df_DJF], ["DJC", "DJF"]):
         fig, ax = plt.subplots(figsize=(14, 4))
         ax.bar(df.index - 0.25, df["Modèle 2"], width=0.5,
-               color=couleur_Modèle 2, label="Modèle 2")
+               color=couleur_TRACC, label="Modèle 2")
         ax.bar(df.index + 0.25, df["Modèle"], width=0.5,
-               color=couleur_modele, label="Modèle")
+               color=couleur_modele, label="Modèle 1")
     
         ax.set_xticks(df.index)
         ax.set_xticklabels(df["Mois"])
@@ -1002,8 +1002,8 @@ if uploaded_model1 and uploaded_model2:
         mod_percentiles_100 = np.percentile(mod_mois, np.linspace(0, 100, 100))
 
         fig, ax = plt.subplots(figsize=(12, 4))
-        ax.plot(np.linspace(0, 100, 100), mod_percentiles_100, label="Modèle", color=couleur_modele)
-        ax.plot(np.linspace(0, 100, 100), obs_percentiles_100, label=f"Modèle 2 ", color=couleur_Modèle 2)
+        ax.plot(np.linspace(0, 100, 100), mod_percentiles_100, label="Modèle 1", color=couleur_modele)
+        ax.plot(np.linspace(0, 100, 100), obs_percentiles_100, label=f"Modèle 2 ", color=couleur_TRACC)
         ax.set_title(f"{mois} - Fonction de répartition", color="white")
         ax.set_xlabel("Percentile", color="white")
         ax.set_ylabel("Température (°C)", color="white")
@@ -1046,7 +1046,7 @@ if uploaded_model1 and uploaded_model2:
     # ----- Plot de la CDF annuelle -----
     fig, ax = plt.subplots(figsize=(12, 4))
     ax.plot(percentiles_cdf, mod_percentiles_annual, label="Modèle", color=couleur_modele)
-    ax.plot(percentiles_cdf, obs_percentiles_annual, label=f"Modèle 2 ", color=couleur_Modèle 2)
+    ax.plot(percentiles_cdf, obs_percentiles_annual, label=f"Modèle 2 ", color=couleur_TRACC)
     
     ax.set_title("Année entière - Fonction de répartition", color="white")
     ax.set_xlabel("Percentile", color="white")
