@@ -339,7 +339,7 @@ if uploaded_model1 and uploaded_model2:
     heures_modele_chaud = np.sum(mod_hourly_annual > tx_seuil_chaud)
     
     if heures_TRACC > heures_modele_chaud:
-        phrase_tx_chaud = f"Le modèle 2 a plus d'heures avec une T>{tx_seuil_chaud}°C ({heures_Modèle 2_chaud}) que le modèle 1 ({heures_modele_chaud})."
+        phrase_tx_chaud = f"Le modèle 2 a plus d'heures avec une T>{tx_seuil_chaud}°C ({heures_TRACC_chaud}) que le modèle 1 ({heures_modele_chaud})."
     else:
         phrase_tx_chaud = f"Le modèle 1 a plus d'heures avec une T>{tx_seuil_chaud}°C ({heures_modele_chaud}) que le modèle 2 ({heures_TRACC_chaud})."
 
