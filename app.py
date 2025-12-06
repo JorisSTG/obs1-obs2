@@ -301,7 +301,7 @@ if uploaded_model1 and uploaded_model2:
 
     # Plot
     fig, ax = plt.subplots(figsize=(16, 5))
-    ax.bar(df_plot_year["Temp_Num"], df_plot_year["Différence absolue modele du modèle 1"], width=0.8,
+    ax.bar(df_plot_year["Temp_Num"], df_plot_year["Différence absolue du modèle 1"], width=0.8,
            label="Différence : Modèle 1 > Modèle 2", color=couleur_modele)
 
     ax.bar(df_plot_year["Temp_Num"], df_plot_year["Différence absolue du modèle 2"], width=0.8,
