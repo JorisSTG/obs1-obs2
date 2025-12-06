@@ -266,7 +266,7 @@ if uploaded_model1 and uploaded_model2:
     # Comptages annuels
     obs_counts_annual = count_hours_in_bins(obs_hourly_annual, bin_edges)
     mod_counts_annual = count_hours_in_bins(mod_hourly_annual, bin_edges)
-    diff_counts_annual_Modèle 2 = np.maximum(0, obs_counts_annual - mod_counts_annual)
+    diff_counts_annual_TRACC = np.maximum(0, obs_counts_annual - mod_counts_annual)
     diff_counts_annual_modele = np.maximum(0, mod_counts_annual - obs_counts_annual)
 
     # Préparer DataFrame pour le plot
