@@ -360,7 +360,7 @@ if uploaded_model1 and uploaded_model2:
     elif heures_TRACC_froid < heures_modele_froid:
         phrase_tn_froid = f"Le modèle 2 a plus d'heures avec une T<{tn_seuil_froid}°C ({heures_TRACC_froid}) que le modèle 1 ({heures_modele_froid})."
     else:
-        phrase_tn_chaud = f"Le modèle 1 et le modèle 2 ont le même nombre d'heure supérérieur à T={tx_seuil_froid}°C."
+        phrase_tn_froid = f"Le modèle 1 et le modèle 2 ont le même nombre d'heure supérérieur à T={tx_seuil_froid}°C."
 
     # Stocker dans st.session_state pour la page Résumé
     st.session_state["resume_hist"] = [phrase_tx_chaud, phrase_tn_froid]
