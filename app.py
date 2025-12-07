@@ -183,12 +183,6 @@ if uploaded_model1 and uploaded_model2:
     df_sup = pd.DataFrame(stats_sup)
     df_inf = pd.DataFrame(stats_inf)
 
-    # Conversion en int
-    for df in [df_sup, df_inf]:
-        df["Heures Modèle"] = df["Heures Modèle 1"].astype(int)
-        df["Heures Modèle 2"] = df["Heures Modèle 2"].astype(int)
-        df["Ecart (Modèle - Modèle 2)"] = df["Ecart (Modèle 1 - Modèle 2)"].astype(int)
-
     # Style : seuils supérieurs → rouge = plus chaud
     df_sup_styled = (
         df_sup.style
