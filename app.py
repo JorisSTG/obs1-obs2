@@ -537,7 +537,7 @@ if uploaded_model1 and uploaded_model2:
     # ============================
     #  SECTION: Tn / Tmoy / Tx journaliers
     # ============================
-    st.subheader("Tn_jour / Tmoy_jour /  — CDF par mois et tableaux de percentiles")
+    st.subheader("Tn_jour / Tmoy_jour / Tx_jour — CDF par mois et tableaux de percentiles")
     
     def daily_stats_from_hourly(hourly):
         """
@@ -1168,13 +1168,11 @@ if uploaded_model1 and uploaded_model2:
     ax.scatter(P_obs, P_mod, color=colors, marker='x', s=50, label='Percentiles')
     
     # Diagonale y=x
-    min_val = min(min(P_obs), min(P_mod))
-    max_val = max(max(P_obs), max(P_mod))
-    ax.plot([min_val, max_val], [min_val, max_val], color='white', linestyle='--', label='y=x')
+    ax.plot([-10, 45], [-10, 45], color='white', linestyle='--', label='y=x')
     
     # Carré : même échelle sur x et y
-    ax.set_xlim(min_val, max_val)
-    ax.set_ylim(min_val, max_val)
+    ax.set_xlim(-10, 45)
+    ax.set_ylim(-10, 45)
     ax.set_aspect('equal', 'box')
     
     ax.set_xlabel("PXX TRACC (°C)")
