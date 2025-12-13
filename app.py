@@ -698,6 +698,12 @@ if uploaded_model1 and uploaded_model2:
     
     Tn_mod_annual = np.concatenate(Tn_jour_mod_all)
     Tx_mod_annual = np.concatenate(Tx_jour_mod_all)
+
+    def count_days_in_bins(daily_values, bin_edges):
+        """
+        Retourne un tableau : nombre de jours dont la valeur tombe dans [X, X+1[ pour chaque X.
+        """
+        return np.histogram(daily_values, bins=bin_edges)[0]
     
     # --- Comptage dans les classes ---
     obs_counts_Tn = count_days_in_bins(Tn_obs_annual, bin_edges)
