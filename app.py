@@ -742,7 +742,7 @@ if uploaded_model1 and uploaded_model2:
     # ---------------- FIGURE Tx ----------------
     fig, ax = plt.subplots(figsize=(15, 5))
     ax.bar(df_hist["Temp_Num"] - 0.25, df_hist["Obs_Tx"], width=0.4,
-           label="Observations Tx", color=couleur_Observations)
+           label="Observations Tx", color=couleur_TRACC)
     ax.bar(df_hist["Temp_Num"] + 0.25, df_hist["Mod_Tx"], width=0.4,
            label="Modèle Tx", color=couleur_modele)
     
