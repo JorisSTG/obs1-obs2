@@ -679,7 +679,7 @@ if uploaded_model1 and uploaded_model2:
         st.dataframe(df_diff_styled, hide_index=True)
 
      # ---------------- Histogramme annuel Tn / Tx (Modèle vs Observations) ----------------
-    st.subheader(f"Histogramme annuel Tn / Tx : Modèle et Observations {file_sel}")
+    st.subheader(f"Histogramme annuel Tn / Tx : Modèle et Observations")
     st.markdown(
         """
         La valeur de chaque barre correspond **au nombre de jours** dans lesquels la température
