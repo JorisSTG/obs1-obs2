@@ -678,6 +678,157 @@ if uploaded_model1 and uploaded_model2:
         )
         st.dataframe(df_diff_styled, hide_index=True)
 
+     # ---------------- Histogramme annuel Tn / Tx (Modèle vs Observations) ----------------
+    st.subheader(f"Histogramme annuel Tn / Tx : Modèle et Observations {file_sel}")
+    st.markdown(
+        """
+        La valeur de chaque barre correspond **au nombre de jours** dans lesquels la température
+        minimale ou maximale journalière est comprise dans l’intervalle **[X°C , X+1°C[**.
+        """,
+        unsafe_allow_html=True
+    )
+    
+    # --- Définition des classes de température ---
+    bin_edges = np.arange(-10, 45, 1)  # Ajuste selon tes données
+    bin_labels = bin_edges[:-1].astype(int)
+    
+    # --- Concaténation annuelle ---
+    Tn_obs_annual = np.concatenate(Tn_jour_all)
+    Tx_obs_annual = np.concatenate(Tx_jour_all)
+    
+    Tn_mod_annual = np.concatenate(Tn_jour_mod_all)
+    Tx_mod_annual = np.concatenate(Tx_jour_mod_all)
+    
+    # --- Comptage dans les classes ---
+    obs_counts_Tn = count_days_in_bins(Tn_obs_annual, bin_edges)
+    mod_counts_Tn = count_days_in_bins(Tn_mod_annual, bin_edges)
+    
+    obs_counts_Tx = count_days_in_bins(Tx_obs_annual, bin_edges)
+    mod_counts_Tx = count_days_in_bins(Tx_mod_annual, bin_edges)
+    
+    # --- Préparer DataFrame ---
+    df_hist = pd.DataFrame({
+        "Temp_Num": bin_labels,
+        "Température": bin_labels.astype(str) + "°C",
+        "Obs_Tn": obs_counts_Tn,
+        "Mod_Tn": mod_counts_Tn,
+        "Obs_Tx": obs_counts_Tx,
+        "Mod_Tx": mod_counts_Tx
+    }).sort_values("Temp_Num")
+    
+    # ---------------- FIGURE Tn ----------------
+    fig, ax = plt.subplots(figsize=(15, 5))
+    ax.bar(df_hist["Temp_Num"] - 0.25, df_hist["Obs_Tn"], width=0.4,
+           label="Observations Tn", color=couleur_Observations)
+    ax.bar(df_hist["Temp_Num"] + 0.25, df_hist["Mod_Tn"], width=0.4,
+           label="Modèle Tn", color=couleur_modele)
+    
+    ax.set_title("Histogramme annuel – Nombre de jours par classe de Tn")
+    ax.set_xlabel("Température (°C)")
+    ax.set_ylabel("Nombre de jours")
+    ax.legend(fontsize='large')
+    st.pyplot(fig)
+    plt.close(fig)
+
+    pct_precision_Tn = precision_overlap(mod_counts_Tn, obs_counts_Tn)
+    st.write(f"Précision du modèle sur les Tn_jour : **{pct_precision_Tn} %**")
+    
+    # ---------------- FIGURE Tx ----------------
+    fig, ax = plt.subplots(figsize=(15, 5))
+    ax.bar(df_hist["Temp_Num"] - 0.25, df_hist["Obs_Tx"], width=0.4,
+           label="Observations Tx", color=couleur_Observations)
+    ax.bar(df_hist["Temp_Num"] + 0.25, df_hist["Mod_Tx"], width=0.4,
+           label="Modèle Tx", color=couleur_modele)
+    
+    ax.set_title("Histogramme annuel – Nombre de jours par classe de Tx")
+    ax.set_xlabel("Température (°C)")
+    ax.set_ylabel("Nombre de jours")
+    ax.legend(fontsize='large')
+    st.pyplot(fig)
+    plt.close(fig)
+
+    pct_precision_Tx = precision_overlap(mod_counts_Tx, obs_counts_Tx)
+    st.write(f"Précision du modèle sur les Tx_jour : **{pct_precision_Tx} %**")
+     
+    # --- Fonction nombre de jours de vague ---
+    def nombre_jours_vague(T):
+        T = np.array(T)
+        n = len(T)
+        jours_vague = np.zeros(n, dtype=bool)
+        jours_vague[T >= 25.3] = True
+        i = 0
+        while i < n:
+            if i + 2 < n and np.all(T[i:i+3] >= 23.4):
+                debut = i
+                fin = i + 2
+                j = fin + 1
+                while j < n and T[j] >= 23.4:
+                    fin = j
+                    j += 1
+                prolong = fin + 1
+                compteur = 0
+                while prolong < n and compteur < 2:
+                    if T[prolong] < 22.4:
+                        break
+                    fin = prolong
+                    compteur += 1
+                    prolong += 1
+                jours_vague[debut:fin+1] = True
+                i = fin + 1
+            else:
+                i += 1
+        return int(jours_vague.sum()), jours_vague
+    
+    # ---------------- Calcul Tm et nombre de jours de vague sur l'année complète ----------------
+
+    # 1) Longueur de chaque mois
+    jours_par_mois = [len(Tx_jour_all[m]) for m in range(12)]
+    
+    # 2) Construire Tm sur toute l'année (continu)
+    Tm_obs_all = np.concatenate([
+        (np.array(Tx_jour_all[m]) + np.array(Tn_jour_all[m])) / 2 for m in range(12)
+    ])
+    
+    Tm_mod_all = np.concatenate([
+        (np.array(Tx_jour_mod_all[m]) + np.array(Tn_jour_mod_all[m])) / 2 for m in range(12)
+    ])
+    
+    # 3) Calculer les jours de vague en continu sur l'année
+    _, jours_vague_obs_all = nombre_jours_vague(Tm_obs_all)
+    _, jours_vague_mod_all = nombre_jours_vague(Tm_mod_all)
+    
+    # 4) Re-découper par mois
+    jours_vague_obs = []
+    jours_vague_mod = []
+    
+    idx = 0
+    for L in jours_par_mois:
+        jours_vague_obs.append(int(jours_vague_obs_all[idx:idx+L].sum()))
+        jours_vague_mod.append(int(jours_vague_mod_all[idx:idx+L].sum()))
+        idx += L
+    
+    # ---------------- Tableau ----------------
+    df_vagues = pd.DataFrame({
+        "Mois": df_tstats["Mois"],
+        "Observations": jours_vague_obs,
+        "Modèle": jours_vague_mod
+    })
+    st.subheader("Nombre de jours de vague de chaleur par mois")
+    st.dataframe(df_vagues, hide_index=True, use_container_width=True)
+    
+    # ---------------- Graphique bâtons ----------------
+    fig, ax = plt.subplots(figsize=(12, 5))
+    x = np.arange(1, 13)
+    ax.bar(x - 0.2, jours_vague_obs, width=0.4, label="Observations", color=couleur_Observations)
+    ax.bar(x + 0.2, jours_vague_mod, width=0.4, label="Modèle", color=couleur_modele)
+    ax.set_xlabel("Mois")
+    ax.set_ylabel("Nombre de jours de vague de chaleur")
+    ax.set_title("Nombre de jours de vague de chaleur par mois : Observations vs Modèle")
+    ax.set_xticks(x)
+    ax.legend()
+    st.pyplot(fig)
+    plt.close(fig)
+
     # ============================
     # GRAPHIQUES : Jours chauds et nuits tropicales par mois
     # ============================
