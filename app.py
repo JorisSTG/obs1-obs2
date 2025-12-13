@@ -816,8 +816,8 @@ if uploaded_model1 and uploaded_model2:
     # ---------------- Tableau ----------------
     df_vagues = pd.DataFrame({
         "Mois": df_tstats["Mois"],
-        "Observations": jours_vague_obs,
-        "Modèle": jours_vague_mod
+        "Modèle 1": jours_vague_obs,
+        "Modèle 2": jours_vague_mod
     })
     st.subheader("Nombre de jours de vague de chaleur par mois")
     st.dataframe(df_vagues, hide_index=True, use_container_width=True)
@@ -825,11 +825,11 @@ if uploaded_model1 and uploaded_model2:
     # ---------------- Graphique bâtons ----------------
     fig, ax = plt.subplots(figsize=(12, 5))
     x = np.arange(1, 13)
-    ax.bar(x - 0.2, jours_vague_obs, width=0.4, label="Observations", color=couleur_Observations)
-    ax.bar(x + 0.2, jours_vague_mod, width=0.4, label="Modèle", color=couleur_modele)
+    ax.bar(x - 0.2, jours_vague_obs, width=0.4, label="Modèle 1", color=couleur_TRACC)
+    ax.bar(x + 0.2, jours_vague_mod, width=0.4, label="Modèle 2", color=couleur_modele)
     ax.set_xlabel("Mois")
     ax.set_ylabel("Nombre de jours de vague de chaleur")
-    ax.set_title("Nombre de jours de vague de chaleur par mois : Observations vs Modèle")
+    ax.set_title("Nombre de jours de vague de chaleur par mois : Modele 1 vs Modèle 2")
     ax.set_xticks(x)
     ax.legend()
     st.pyplot(fig)
